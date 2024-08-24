@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>ruoyi-boot</artifactId>
-        <groupId>com.ruoyi</groupId>
-        <version>3.8.8</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-generator</artifactId>
+    <parent>
+        <groupId>com.ruoyi</groupId>
+        <artifactId>ruoyi-boot</artifactId>
+        <version>${revision}</version>
+    </parent>
 
-    <description>
-        generator代码生成
-    </description>
+    <artifactId>ruoyi-generator</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>代码生成</description>
 
     <dependencies>
 
