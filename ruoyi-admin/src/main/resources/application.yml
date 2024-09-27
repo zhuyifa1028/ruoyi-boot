@@ -32,14 +32,6 @@ server:
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
 
-# 日志配置
-logging:
-  level:
-    com.ruoyi: debug
-    org.springframework: warn
-    # 输出 SQL 绑定参数
-    org.hibernate.orm.jdbc.bind: TRACE
-
 # 用户配置
 user:
   password:
@@ -90,14 +82,6 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
-  jpa:
-    # 输出 SQL
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      # 格式化输出的 SQL
-      hibernate.format_sql: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -141,3 +125,16 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+#################### 接口文档配置 ####################
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.ruoyi

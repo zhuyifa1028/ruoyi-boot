@@ -15,8 +15,8 @@ import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
-import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysConfigService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +46,7 @@ public class SysLoginServiceImpl implements SysLoginService {
     private ISysUserService userService;
 
     @Resource
-    private ISysConfigService configService;
+    private SysConfigService configService;
 
     @Resource
     private AsyncFactory asyncFactory;
