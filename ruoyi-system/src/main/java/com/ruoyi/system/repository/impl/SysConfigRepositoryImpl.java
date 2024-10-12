@@ -3,7 +3,9 @@ package com.ruoyi.system.repository.impl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.sql.mysql.MySQLQueryFactory;
+import com.ruoyi.framework.querydsl.mapper.EntityMapper;
 import com.ruoyi.system.entity.SysConfig;
+import com.ruoyi.system.entity.path.SysConfigPath;
 import com.ruoyi.system.query.SysConfigQuery;
 import com.ruoyi.system.repository.SysConfigRepository;
 import org.springframework.data.domain.Page;
@@ -14,27 +16,26 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.ruoyi.system.entity.path.SysConfigPath.sysConfig;
-
 @Transactional
 @Component
 public class SysConfigRepositoryImpl implements SysConfigRepository {
+
+    private final SysConfigPath sysConfig = new SysConfigPath("a");
 
     @Resource
     private MySQLQueryFactory queryFactory;
 
     @Override
     public void insert(SysConfig entity) {
-        beforeInsert(entity);
         queryFactory.insert(sysConfig)
-                .populate(entity)
+                .populate(entity, EntityMapper.INSERT)
                 .execute();
     }
 
     @Override
     public void update(SysConfig entity) {
         queryFactory.update(sysConfig)
-                .populate(entity)
+                .populate(entity, EntityMapper.UPDATE)
                 .where(sysConfig.configId.eq(entity.getConfigId()))
                 .execute();
     }
