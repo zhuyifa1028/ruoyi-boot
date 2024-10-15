@@ -117,7 +117,7 @@ public class BaseController {
      * @param rows 影响行数
      * @return 操作结果
      */
-    protected AjaxResult toAjax(int rows) {
+    protected AjaxResult toAjax(long rows) {
         return rows > 0 ? AjaxResult.success() : AjaxResult.error();
     }
 

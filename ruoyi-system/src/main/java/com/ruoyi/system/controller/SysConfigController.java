@@ -33,7 +33,6 @@ public class SysConfigController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:config:list')")
     @GetMapping(value = "/list")
     public TableDataInfo list(@ParameterObject SysConfigQuery query) {
-        startPage();
         Page<SysConfigVO> page = configService.selectConfigList(query);
         return getDataTable(page);
     }

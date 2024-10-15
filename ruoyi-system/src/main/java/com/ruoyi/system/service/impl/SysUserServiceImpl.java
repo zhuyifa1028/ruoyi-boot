@@ -14,7 +14,6 @@ import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.mapper.*;
-import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.SysConfigService;
 import org.slf4j.Logger;
@@ -55,9 +54,6 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Resource
     private SysConfigService configService;
-
-    @Resource
-    private ISysDeptService deptService;
 
     @Resource
     protected Validator validator;
@@ -453,7 +449,6 @@ public class SysUserServiceImpl implements ISysUserService {
                 SysUser u = userMapper.selectUserByUserName(user.getUserName());
                 if (StringUtils.isNull(u)) {
                     BeanValidators.validateWithException(validator, user);
-                    deptService.checkDeptDataScope(user.getDeptId());
                     String password = configService.selectConfigByKey("sys.user.initPassword");
                     user.setPassword(SecurityUtils.encryptPassword(password));
                     user.setCreateBy(operName);
@@ -464,7 +459,6 @@ public class SysUserServiceImpl implements ISysUserService {
                     BeanValidators.validateWithException(validator, user);
                     checkUserAllowed(u);
                     checkUserDataScope(u.getUserId());
-                    deptService.checkDeptDataScope(user.getDeptId());
                     user.setUserId(u.getUserId());
                     user.setUpdateBy(operName);
                     userMapper.updateUser(user);

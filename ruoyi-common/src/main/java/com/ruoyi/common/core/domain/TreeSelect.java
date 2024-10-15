@@ -1,17 +1,18 @@
 package com.ruoyi.common.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ruoyi.common.core.domain.entity.SysMenu;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.common.core.domain.entity.SysMenu;
 
 /**
  * Treeselect树结构实体类
- * 
+ *
  * @author ruoyi
  */
+@SuppressWarnings("unused")
 public class TreeSelect implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -31,12 +32,6 @@ public class TreeSelect implements Serializable
 
     }
 
-    public TreeSelect(SysDept dept)
-    {
-        this.id = dept.getDeptId();
-        this.label = dept.getDeptName();
-        this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
-    }
 
     public TreeSelect(SysMenu menu)
     {

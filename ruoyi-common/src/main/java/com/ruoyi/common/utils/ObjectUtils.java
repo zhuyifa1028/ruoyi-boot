@@ -12,4 +12,7 @@ public class ObjectUtils extends org.apache.commons.lang3.ObjectUtils {
         return Objects.nonNull(obj);
     }
 
+    public static boolean equal(Object a, Object b) {
+        return Objects.equals(a, b);
+    }
 }
