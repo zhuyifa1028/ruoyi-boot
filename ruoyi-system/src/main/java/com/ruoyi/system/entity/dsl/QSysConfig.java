@@ -1,4 +1,4 @@
-package com.ruoyi.system.entity.path;
+package com.ruoyi.system.entity.dsl;
 
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -12,10 +12,8 @@ import javax.annotation.Generated;
 import java.sql.Types;
 import java.time.LocalDateTime;
 
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
-
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class SysConfigPath extends RelationalPathBase<SysConfig> {
+public class QSysConfig extends RelationalPathBase<SysConfig> {
 
     public final NumberPath<Long> configId = createNumber("configId", Long.class);
 
@@ -39,8 +37,8 @@ public class SysConfigPath extends RelationalPathBase<SysConfig> {
 
     public final PrimaryKey<SysConfig> primary = createPrimaryKey(configId);
 
-    public SysConfigPath(String variable) {
-        super(SysConfig.class, forVariable(variable), "ruoyi", "sys_config");
+    public QSysConfig(String variable) {
+        super(SysConfig.class, variable, "ruoyi", "sys_config");
         addMetadata();
     }
 

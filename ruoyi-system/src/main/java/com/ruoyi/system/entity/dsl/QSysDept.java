@@ -1,4 +1,4 @@
-package com.ruoyi.system.entity.path;
+package com.ruoyi.system.entity.dsl;
 
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -11,8 +11,6 @@ import com.ruoyi.system.entity.SysDept;
 import javax.annotation.Generated;
 import java.sql.Types;
 import java.time.LocalDateTime;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class QSysDept extends RelationalPathBase<SysDept> {
@@ -46,7 +44,7 @@ public class QSysDept extends RelationalPathBase<SysDept> {
     public final PrimaryKey<SysDept> primary = createPrimaryKey(deptId);
 
     public QSysDept(String variable) {
-        super(SysDept.class, forVariable(variable), "ruoyi", "sys_dept");
+        super(SysDept.class, variable, "ruoyi", "sys_dept");
         addMetadata();
     }
 

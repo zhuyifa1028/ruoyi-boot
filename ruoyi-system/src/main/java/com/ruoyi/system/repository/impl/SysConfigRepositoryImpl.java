@@ -2,10 +2,10 @@ package com.ruoyi.system.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.sql.dml.BeanMapper;
 import com.querydsl.sql.mysql.MySQLQueryFactory;
-import com.ruoyi.framework.querydsl.mapper.EntityMapper;
 import com.ruoyi.system.entity.SysConfig;
-import com.ruoyi.system.entity.path.SysConfigPath;
+import com.ruoyi.system.entity.dsl.QSysConfig;
 import com.ruoyi.system.query.SysConfigQuery;
 import com.ruoyi.system.repository.SysConfigRepository;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class SysConfigRepositoryImpl implements SysConfigRepository {
 
-    private final SysConfigPath sysConfig = new SysConfigPath("a");
+    private final QSysConfig sysConfig = new QSysConfig("a");
 
     @Resource
     private MySQLQueryFactory queryFactory;
@@ -28,14 +28,14 @@ public class SysConfigRepositoryImpl implements SysConfigRepository {
     @Override
     public void insert(SysConfig entity) {
         queryFactory.insert(sysConfig)
-                .populate(entity, EntityMapper.INSERT)
+                .populate(entity, BeanMapper.DEFAULT)
                 .execute();
     }
 
     @Override
     public void update(SysConfig entity) {
         queryFactory.update(sysConfig)
-                .populate(entity, EntityMapper.UPDATE)
+                .populate(entity, BeanMapper.DEFAULT)
                 .where(sysConfig.configId.eq(entity.getConfigId()))
                 .execute();
     }

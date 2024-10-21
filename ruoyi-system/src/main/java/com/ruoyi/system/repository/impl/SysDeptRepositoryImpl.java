@@ -1,14 +1,12 @@
 package com.ruoyi.system.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.sql.dml.BeanMapper;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.mysql.MySQLQueryFactory;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.querydsl.mapper.EntityMapper;
-import com.ruoyi.system.entity.SysDept;
-import com.ruoyi.system.entity.path.QSysDept;
+import com.ruoyi.framework.querydsl.expressions.MySQLExpressions;
+import com.ruoyi.system.entity.dsl.QSysDept;
 import com.ruoyi.system.query.SysDeptQuery;
 import com.ruoyi.system.repository.SysDeptRepository;
 import org.apache.commons.collections4.CollectionUtils;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -37,9 +34,9 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 新增部门
      */
     @Override
-    public long insertDept(SysDept entity) {
+    public long insertDept(com.ruoyi.system.entity.SysDept entity) {
         return queryFactory.insert(sysDept)
-                .populate(entity, EntityMapper.INSERT)
+                .populate(entity, BeanMapper.DEFAULT)
                 .execute();
     }
 
@@ -47,9 +44,9 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 修改部门
      */
     @Override
-    public long updateDept(SysDept entity) {
+    public long updateDept(com.ruoyi.system.entity.SysDept entity) {
         return queryFactory.update(sysDept)
-                .populate(entity, EntityMapper.UPDATE)
+                .populate(entity, BeanMapper.DEFAULT)
                 .where(sysDept.deptId.eq(entity.getDeptId()))
                 .execute();
     }
@@ -58,19 +55,15 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 修改子元素关系
      */
     @Override
-    public void updateDeptAncestor(List<SysDept> entityList) {
+    public void updateDeptAncestor(List<com.ruoyi.system.entity.SysDept> entityList) {
         if (CollectionUtils.isEmpty(entityList)) {
             return;
         }
 
         SQLUpdateClause update = queryFactory.update(sysDept);
 
-        for (SysDept entity : entityList) {
-            update  // 修改字段
-                    .set(sysDept.ancestor, entity.getAncestor())
-                    .set(sysDept.lastModifiedBy, SecurityUtils.getUsername())
-                    .set(sysDept.lastModifiedDate, LocalDateTime.now())
-                    // 根据部门ID
+        for (com.ruoyi.system.entity.SysDept entity : entityList) {
+            update.set(sysDept.ancestor, entity.getAncestor())
                     .where(sysDept.deptId.eq(entity.getDeptId()))
                     .addBatch();
         }
@@ -92,7 +85,7 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 根据条件查询部门列表
      */
     @Override
-    public List<SysDept> selectDeptList(SysDeptQuery query) {
+    public List<com.ruoyi.system.entity.SysDept> selectDeptList(SysDeptQuery query) {
         BooleanBuilder builder = new BooleanBuilder();
 
         // 部门名称
@@ -113,9 +106,9 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 根据部门ID查询所有子部门
      */
     @Override
-    public List<SysDept> selectChildrenByDeptId(Long deptId) {
+    public List<com.ruoyi.system.entity.SysDept> selectChildrenByDeptId(Long deptId) {
         return queryFactory.selectFrom(sysDept)
-                .where(Expressions.booleanTemplate("find_in_set({0}, {1}) > 0", deptId, sysDept.ancestor))
+                .where(MySQLExpressions.findInSet(deptId, sysDept.ancestor))
                 .fetch();
     }
 
@@ -123,7 +116,7 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 根据部门ID查询
      */
     @Override
-    public SysDept selectByDeptId(Long deptId) {
+    public com.ruoyi.system.entity.SysDept selectByDeptId(Long deptId) {
         return queryFactory.selectFrom(sysDept)
                 .where(sysDept.deptId.eq(deptId))
                 .fetchFirst();
@@ -133,10 +126,10 @@ public class SysDeptRepositoryImpl implements SysDeptRepository {
      * 校验部门名称是否唯一
      */
     @Override
-    public SysDept selectByDeptNameUnique(String deptName, Long parentId) {
+    public com.ruoyi.system.entity.SysDept selectByDeptNameUnique(String deptName, Long parentId) {
         return queryFactory.selectFrom(sysDept)
-                .where(sysDept.deptName.eq(deptName)
-                        .and(sysDept.parentId.eq(parentId)))
+                .where(sysDept.deptName.eq(deptName))
+                .where(sysDept.parentId.eq(parentId))
                 .fetchFirst();
     }
 
