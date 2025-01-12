@@ -40,6 +40,11 @@
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-core</artifactId>
+                <version>5.1.0</version>
+            </dependency>
 
             <!-- 覆盖SpringFramework的依赖配置-->
             <dependency>

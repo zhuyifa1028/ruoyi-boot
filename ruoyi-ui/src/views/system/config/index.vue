@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="参数名称" prop="configName">
+      <el-form-item label="配置名称" prop="configName">
         <el-input
           v-model="queryParams.configName"
-          placeholder="请输入参数名称"
+          placeholder="请输入配置名称"
           clearable
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="参数键名" prop="configKey">
+      <el-form-item label="配置键" prop="configKey">
         <el-input
           v-model="queryParams.configKey"
-          placeholder="请输入参数键名"
+          placeholder="请输入配置键"
           clearable
           style="width: 240px"
           @keyup.enter.native="handleQuery"
@@ -109,10 +109,10 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="参数主键" align="center" prop="configId"/>
-      <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true"/>
-      <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true"/>
-      <el-table-column label="参数键值" align="center" prop="configValue" :show-overflow-tooltip="true"/>
+      <el-table-column label="配置主键" align="center" prop="configId"/>
+      <el-table-column label="配置名称" align="center" prop="configName" :show-overflow-tooltip="true"/>
+      <el-table-column label="配置键" align="center" prop="configKey" :show-overflow-tooltip="true"/>
+      <el-table-column label="配置值" align="center" prop="configValue" :show-overflow-tooltip="true"/>
       <el-table-column label="系统内置" align="center" prop="configType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.configType"/>
@@ -154,17 +154,17 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改参数配置对话框 -->
+    <!-- 添加或修改配置配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="参数名称" prop="configName">
-          <el-input v-model="form.configName" placeholder="请输入参数名称"/>
+        <el-form-item label="配置名称" prop="configName">
+          <el-input v-model="form.configName" placeholder="请输入配置名称"/>
         </el-form-item>
-        <el-form-item label="参数键名" prop="configKey">
-          <el-input v-model="form.configKey" placeholder="请输入参数键名"/>
+        <el-form-item label="配置键" prop="configKey">
+          <el-input v-model="form.configKey" placeholder="请输入配置键"/>
         </el-form-item>
-        <el-form-item label="参数键值" prop="configValue">
-          <el-input v-model="form.configValue" type="textarea" placeholder="请输入参数键值"/>
+        <el-form-item label="配置值" prop="configValue">
+          <el-input v-model="form.configValue" type="textarea" placeholder="请输入配置值"/>
         </el-form-item>
         <el-form-item label="系统内置" prop="configType">
           <el-radio-group v-model="form.configType">
@@ -189,7 +189,7 @@
 </template>
 
 <script>
-import { addConfig, delConfig, getConfig, listConfig, refreshCache, updateConfig } from "@/api/system/config";
+import { deleteConfig, insertConfig, refreshConfigCache, selectConfig, selectConfigList, updateConfig } from "@/api/system/config";
 
 export default {
   name: "Config",
@@ -208,7 +208,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 参数表格数据
+      // 配置表格数据
       configList: [],
       // 弹出层标题
       title: "",
@@ -216,7 +216,7 @@ export default {
       open: false,
       // 日期范围
       dateRange: [],
-      // 查询参数
+      // 查询配置
       queryParams: {
         pageNum: 1,
         pageSize: 10,
@@ -224,18 +224,18 @@ export default {
         configKey: undefined,
         configType: undefined
       },
-      // 表单参数
+      // 表单配置
       form: {},
       // 表单校验
       rules: {
         configName: [
-          { required: true, message: "参数名称不能为空", trigger: "blur" }
+          { required: true, message: "配置名称不能为空", trigger: "blur" }
         ],
         configKey: [
-          { required: true, message: "参数键名不能为空", trigger: "blur" }
+          { required: true, message: "配置键不能为空", trigger: "blur" }
         ],
         configValue: [
-          { required: true, message: "参数键值不能为空", trigger: "blur" }
+          { required: true, message: "配置值不能为空", trigger: "blur" }
         ]
       }
     };
@@ -244,15 +244,22 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询参数列表 */
+    /** 查询配置列表 */
     getList() {
       this.loading = true;
-      listConfig(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.configList = response.rows;
-          this.total = response.total;
+      if (this.dateRange) {
+        this.queryParams.startTime = this.dateRange[0]
+        this.queryParams.endTime = this.dateRange[1]
+      }
+      selectConfigList(this.queryParams)
+        .then(response => {
+            this.configList = response.rows;
+            this.total = response.total;
+          }
+        )
+        .finally(() => {
           this.loading = false;
-        }
-      );
+        })
     },
     // 取消按钮
     cancel() {
@@ -286,7 +293,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加参数";
+      this.title = "添加配置";
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -298,10 +305,10 @@ export default {
     handleUpdate(row) {
       this.reset();
       const configId = row.configId || this.ids
-      getConfig(configId).then(response => {
+      selectConfig(configId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改参数";
+        this.title = "修改配置";
       });
     },
     /** 提交按钮 */
@@ -309,13 +316,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.configId != undefined) {
-            updateConfig(this.form).then(response => {
+            updateConfig(this.form).then(() => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addConfig(this.form).then(response => {
+            insertConfig(this.form).then(() => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -327,8 +334,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const configIds = row.configId || this.ids;
-      this.$modal.confirm('是否确认删除参数编号为"' + configIds + '"的数据项？').then(function () {
-        return delConfig(configIds);
+      this.$modal.confirm('是否确认删除配置编号为"' + configIds + '"的数据项？').then(function () {
+        return deleteConfig(configIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -343,7 +350,7 @@ export default {
     },
     /** 刷新缓存按钮操作 */
     handleRefreshCache() {
-      refreshCache().then(() => {
+      refreshConfigCache().then(() => {
         this.$modal.msgSuccess("刷新成功");
       });
     }

@@ -1,60 +1,60 @@
 import request from '@/utils/request'
 
-// 查询参数列表
-export function listConfig(query) {
+// 查询配置列表
+export function selectConfigList(params) {
   return request({
-    url: '/system/config/list',
+    url: '/system/config/selectConfigList',
     method: 'get',
-    params: query
+    params,
   })
 }
 
-// 查询参数详细
-export function getConfig(configId) {
+// 查询配置信息
+export function selectConfig(configId) {
   return request({
-    url: '/system/config/' + configId,
-    method: 'get'
+    url: '/system/config/selectConfig/' + configId,
+    method: 'get',
   })
 }
 
-// 根据参数键名查询参数值
-export function getConfigKey(configKey) {
+// 查询配置值
+export function selectConfigValue(configKey) {
   return request({
-    url: '/system/config/configKey/' + configKey,
-    method: 'get'
+    url: '/system/config/selectConfigValue/' + configKey,
+    method: 'get',
   })
 }
 
-// 新增参数配置
-export function addConfig(data) {
+// 新增配置
+export function insertConfig(data) {
   return request({
-    url: '/system/config',
+    url: '/system/config/insertConfig',
     method: 'post',
-    data: data
+    data,
   })
 }
 
-// 修改参数配置
+// 修改配置
 export function updateConfig(data) {
   return request({
-    url: '/system/config',
+    url: '/system/config/updateConfig',
     method: 'put',
-    data: data
+    data,
   })
 }
 
-// 删除参数配置
-export function delConfig(configId) {
+// 删除配置
+export function deleteConfig(configIds) {
   return request({
-    url: '/system/config/' + configId,
-    method: 'delete'
+    url: '/system/config/deleteConfig/' + configIds,
+    method: 'delete',
   })
 }
 
-// 刷新参数缓存
-export function refreshCache() {
+// 刷新配置缓存
+export function refreshConfigCache() {
   return request({
-    url: '/system/config/refreshCache',
-    method: 'delete'
+    url: '/system/config/refreshConfigCache',
+    method: 'delete',
   })
 }
