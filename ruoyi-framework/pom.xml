@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>ruoyi</artifactId>
-        <groupId>com.ruoyi</groupId>
-        <version>3.8.9</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-framework</artifactId>
+    <parent>
+        <groupId>com.ruoyi</groupId>
+        <artifactId>ruoyi</artifactId>
+        <version>${revision}</version>
+    </parent>
 
-    <description>
-        framework框架核心
-    </description>
+    <artifactId>ruoyi-framework</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
+
+        <!-- 通用工具 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-common</artifactId>
+        </dependency>
 
         <!-- SpringBoot Web容器 -->
         <dependency>
@@ -51,12 +54,6 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-        </dependency>
-
-        <!-- 系统模块-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-system</artifactId>
         </dependency>
 
     </dependencies>
