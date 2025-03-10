@@ -1,3 +1,4 @@
+#file: noinspection SpringBootApplicationYaml
 # 数据源配置
 spring:
   datasource:
@@ -59,3 +60,19 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+
+  jpa:
+    # 输出 SQL
+    show-sql: true
+    # 更新表结构
+    hibernate:
+      ddl-auto: update
+      # 格式化输出的 SQL
+    properties:
+      "hibernate.format_sql": true
+
+logging:
+  level:
+    "ROOT": INFO
+    # 输出 SQL 绑定参数
+    "org.hibernate.orm.jdbc.bind": TRACE

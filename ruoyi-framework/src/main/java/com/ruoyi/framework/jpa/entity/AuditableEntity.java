@@ -11,29 +11,30 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AuditableEntity implements Serializable {
+public abstract class AuditableEntity extends PersistableEntity {
 
     @CreatedBy
-    @Column(length = 20)
+    @Column(length = 20, updatable = false)
     @Comment(value = "创建人")
     private String createdBy;
 
     @CreatedDate
+    @Column(updatable = false)
     @Comment(value = "创建日期")
     private LocalDateTime createdDate;
 
     @LastModifiedBy
-    @Column(length = 20)
+    @Column(length = 20, insertable = false)
     @Comment(value = "上次修改人")
     private String lastModifiedBy;
 
     @LastModifiedDate
+    @Column(insertable = false)
     @Comment(value = "上次修改日期")
     private LocalDateTime lastModifiedDate;
 

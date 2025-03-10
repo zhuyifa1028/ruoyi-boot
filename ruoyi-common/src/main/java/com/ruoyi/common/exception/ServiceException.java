@@ -1,16 +1,23 @@
 package com.ruoyi.common.exception;
 
+import cn.hutool.core.util.StrUtil;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 /**
  * 业务异常
  *
  * @author ruoyi
  */
+@Data
+@NoArgsConstructor
 public final class ServiceException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 错误码
      */
+    @Getter
     private Integer code;
 
     /**
@@ -18,48 +25,17 @@ public final class ServiceException extends RuntimeException {
      */
     private String message;
 
-    /**
-     * 错误明细，内部调试错误
-     * <p>
-     * 和 {@link CommonResult#getDetailMessage()} 一致的设计
-     */
-    private String detailMessage;
-
-    /**
-     * 空构造方法，避免反序列化问题
-     */
-    public ServiceException() {
+    public ServiceException(Integer code, String message) {
+        this.message = message;
+        this.code = code;
     }
 
     public ServiceException(String message) {
         this.message = message;
     }
 
-    public ServiceException(String message, Integer code) {
-        this.message = message;
-        this.code = code;
+    public ServiceException(String message, Object... params) {
+        this.message = StrUtil.format(message, params);
     }
 
-    public String getDetailMessage() {
-        return detailMessage;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public ServiceException setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    public ServiceException setDetailMessage(String detailMessage) {
-        this.detailMessage = detailMessage;
-        return this;
-    }
 }
