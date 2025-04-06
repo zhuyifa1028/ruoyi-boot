@@ -17,11 +17,20 @@
 
     <dependencies>
 
-        <!-- spring-boot-devtools -->
+        <!-- 系统模块 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional> <!-- 表示依赖不会传递 -->
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-system</artifactId>
+        </dependency>
+        <!-- 定时任务 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-quartz</artifactId>
+        </dependency>
+        <!-- 代码生成 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
         <!-- spring-doc -->
@@ -36,37 +45,22 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
-        <!-- 核心模块-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-framework</artifactId>
-        </dependency>
-
-        <!-- 定时任务-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-quartz</artifactId>
-        </dependency>
-
-        <!-- 代码生成-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-generator</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.5.15</version>
+                <version>${spring-boot.version}</version>
                 <configuration>
-                    <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                    <mainClass>com.ruoyi.RuoYiApplication</mainClass>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>repackage</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
@@ -83,7 +77,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>${project.artifactId}</finalName>
     </build>
 
 </project>
