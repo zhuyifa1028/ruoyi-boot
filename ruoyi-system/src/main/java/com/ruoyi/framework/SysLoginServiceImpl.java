@@ -17,8 +17,8 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysConfigService;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,7 +50,7 @@ public class SysLoginServiceImpl implements SysLoginService {
     private ISysUserService userService;
 
     @Resource
-    private ISysConfigService configService;
+    private SysConfigService configService;
 
     /**
      * 登录验证

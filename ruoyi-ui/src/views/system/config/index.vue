@@ -218,7 +218,7 @@ export default {
       dateRange: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
+        pageNumber: 1,
         pageSize: 10,
         configName: undefined,
         configKey: undefined,
@@ -248,7 +248,7 @@ export default {
     getList() {
       this.loading = true;
       listConfig(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.configList = response.rows;
+        this.configList = response.data;
           this.total = response.total;
           this.loading = false;
         }

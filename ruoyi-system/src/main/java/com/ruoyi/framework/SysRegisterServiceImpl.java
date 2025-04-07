@@ -14,8 +14,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncFactory;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.web.service.SysRegisterService;
-import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysConfigService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,7 @@ public class SysRegisterServiceImpl implements SysRegisterService {
     private ISysUserService userService;
 
     @Resource
-    private ISysConfigService configService;
+    private SysConfigService configService;
 
     /**
      * 注册
