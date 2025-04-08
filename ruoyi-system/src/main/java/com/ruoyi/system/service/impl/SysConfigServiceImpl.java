@@ -1,11 +1,13 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.querydsl.core.BooleanBuilder;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.framework.jpa.utils.PageableUtils;
@@ -18,8 +20,6 @@ import com.ruoyi.system.service.SysConfigService;
 import com.ruoyi.system.vo.SysConfigVO;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static com.ruoyi.system.entity.QSysConfig.sysConfig;
 
@@ -56,19 +55,19 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public Page<SysConfigVO> selectConfigList(SysConfigQuery query) {
         BooleanBuilder predicate = new BooleanBuilder();
-        if (StringUtils.isNotBlank(query.getConfigName())) {
+        if (StrUtil.isNotBlank(query.getConfigName())) {
             predicate.and(sysConfig.configName.contains(query.getConfigName()));
         }
-        if (StringUtils.isNotBlank(query.getConfigKey())) {
+        if (StrUtil.isNotBlank(query.getConfigKey())) {
             predicate.and(sysConfig.configKey.contains(query.getConfigKey()));
         }
-        if (StringUtils.isNotBlank(query.getConfigType())) {
+        if (StrUtil.isNotBlank(query.getConfigType())) {
             predicate.and(sysConfig.configType.eq(query.getConfigType()));
         }
-        if (ObjectUtils.isNotEmpty(query.getBeginTime())) {
+        if (ObjUtil.isNotNull(query.getBeginTime())) {
             predicate.and(sysConfig.createTime.goe(LocalDateTime.of(query.getBeginTime(), LocalTime.MIN)));
         }
-        if (ObjectUtils.isNotEmpty(query.getEndTime())) {
+        if (ObjUtil.isNotNull(query.getEndTime())) {
             predicate.and(sysConfig.createTime.loe(LocalDateTime.of(query.getEndTime(), LocalTime.MAX)));
         }
 
@@ -85,10 +84,12 @@ public class SysConfigServiceImpl implements SysConfigService {
     @DataSource(DataSourceType.MASTER)
     @Override
     public SysConfigVO selectConfigById(String configId) {
-        Optional<SysConfig> opt = sysConfigRepository.findById(configId);
+        SysConfig config = sysConfigRepository.getReferenceById(configId);
+        if (ObjUtil.isNull(config)) {
+            throw new ServiceException("未找到信息，请检查配置ID");
+        }
 
-        return opt.map(item -> sysConfigConverter.toSysConfigVO(item))
-                .orElse(null);
+        return sysConfigConverter.toSysConfigVO(config);
     }
 
     /**
@@ -97,17 +98,17 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public String selectConfigByKey(String configKey) {
         String configValue = redisCache.getCacheObject(CacheConstants.SYS_CONFIG, configKey);
-        if (StringUtils.isNotBlank(configValue)) {
+        if (ObjUtil.isNotNull(configValue)) {
             return configValue;
         }
 
-        SysConfig retConfig = sysConfigRepository.findByConfigKey(configKey);
-        if (ObjectUtils.isNotEmpty(retConfig)) {
+        SysConfig config = sysConfigRepository.findByConfigKey(configKey);
+        if (ObjUtil.isNotNull(config)) {
 
-            redisCache.setCacheObject(CacheConstants.SYS_CONFIG, configKey, retConfig.getConfigValue());
-            return retConfig.getConfigValue();
+            redisCache.setCacheObject(CacheConstants.SYS_CONFIG, configKey, config.getConfigValue());
+            return config.getConfigValue();
         }
-        return StringUtils.EMPTY;
+        return StrUtil.EMPTY;
     }
 
     /**
@@ -118,10 +119,10 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public boolean selectCaptchaEnabled() {
         String captchaEnabled = selectConfigByKey("sys.account.captchaEnabled");
-        if (StringUtils.isEmpty(captchaEnabled)) {
-            return true;
+        if (StrUtil.isNotBlank(captchaEnabled)) {
+            return Convert.toBool(captchaEnabled);
         }
-        return Convert.toBool(captchaEnabled);
+        return false;
     }
 
     /**
@@ -130,7 +131,7 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public void insertConfig(SysConfigDTO dto) {
         SysConfig check = sysConfigRepository.findByConfigKey(dto.getConfigKey());
-        if (ObjectUtils.isNotEmpty(check)) {
+        if (ObjUtil.isNotNull(check)) {
             throw new ServiceException("新增参数'" + dto.getConfigName() + "'失败，参数键名已存在");
         }
 
@@ -147,21 +148,22 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public void updateConfig(SysConfigDTO dto) {
         SysConfig info = sysConfigRepository.getReferenceById(dto.getConfigId());
-        if (ObjectUtils.isEmpty(info)) {
+        if (ObjUtil.isNull(info)) {
             throw new ServiceException("修改参数'" + dto.getConfigName() + "'失败，参数信息不存在");
         }
 
         SysConfig check = sysConfigRepository.findByConfigKey(dto.getConfigKey());
-        if (ObjectUtils.isNotEmpty(check) && ObjectUtils.notEqual(check.getConfigId(), dto.getConfigId())) {
+        if (ObjUtil.isNotNull(check) && ObjUtil.notEqual(check.getConfigId(), dto.getConfigId())) {
             throw new ServiceException("修改参数'" + dto.getConfigName() + "'失败，参数键名已存在");
         }
 
         SysConfig entity = sysConfigConverter.toSysConfig(dto);
         sysConfigRepository.saveAndFlush(entity);
 
-        if (ObjectUtils.notEqual(info.getConfigKey(), dto.getConfigKey())) {
+        if (ObjUtil.notEqual(info.getConfigKey(), dto.getConfigKey())) {
             redisCache.deleteObject(CacheConstants.SYS_CONFIG, info.getConfigKey());
         }
+
         redisCache.setCacheObject(CacheConstants.SYS_CONFIG, dto.getConfigKey(), dto.getConfigValue());
     }
 
@@ -172,7 +174,7 @@ public class SysConfigServiceImpl implements SysConfigService {
     public void deleteConfigByIds(List<String> configIds) {
         List<SysConfig> list = sysConfigRepository.findAllById(configIds);
         for (SysConfig config : list) {
-            if (StringUtils.equals(UserConstants.YES, config.getConfigType())) {
+            if (StrUtil.equals(UserConstants.YES, config.getConfigType())) {
                 throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
             sysConfigRepository.delete(config);

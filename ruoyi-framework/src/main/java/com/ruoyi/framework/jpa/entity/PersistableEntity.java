@@ -1,15 +1,11 @@
 package com.ruoyi.framework.jpa.entity;
 
-import com.ruoyi.common.utils.uuid.IdUtils;
+import cn.hutool.core.util.IdUtil;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.domain.Persistable;
 
 @MappedSuperclass
-@DynamicInsert
-@DynamicUpdate
 public abstract class PersistableEntity implements Persistable<String> {
 
     @Transient
@@ -23,7 +19,7 @@ public abstract class PersistableEntity implements Persistable<String> {
     @Transient
     public void markCreated() {
         this.isNew = true;
-        this.setId(IdUtils.fastUUID());
+        this.setId(IdUtil.getSnowflakeNextIdStr());
     }
 
     @Transient
