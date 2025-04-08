@@ -7,11 +7,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SoftDelete;
 
 @Data
 @Entity
 @Table(name = "sys_config")
 @Comment(value = "配置表")
+@SoftDelete
 public class SysConfig extends AuditableEntity {
 
     @Id

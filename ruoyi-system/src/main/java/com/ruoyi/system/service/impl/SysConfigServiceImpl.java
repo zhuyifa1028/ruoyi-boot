@@ -63,7 +63,7 @@ public class SysConfigServiceImpl implements SysConfigService {
             predicate.and(sysConfig.configKey.contains(query.getConfigKey()));
         }
         if (StringUtils.isNotBlank(query.getConfigType())) {
-            predicate.and(sysConfig.configValue.eq(query.getConfigType()));
+            predicate.and(sysConfig.configType.eq(query.getConfigType()));
         }
         if (ObjectUtils.isNotEmpty(query.getBeginTime())) {
             predicate.and(sysConfig.createTime.goe(LocalDateTime.of(query.getBeginTime(), LocalTime.MIN)));
