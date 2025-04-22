@@ -31,4 +31,43 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-maven-plugin</artifactId>
+                <version>${querydsl.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>export</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbcDriver>com.mysql.cj.jdbc.Driver</jdbcDriver>
+                    <jdbcUrl>jdbc:mysql://localhost:3306/ruoyi?databaseTerm=schema&amp;nullCatalogMeansCurrent=true</jdbcUrl>
+                    <jdbcUser>root</jdbcUser>
+                    <jdbcPassword>password</jdbcPassword>
+                    <tableNamePattern>sys_%</tableNamePattern>
+                    <packageName>com.ruoyi.system.entity</packageName>
+                    <targetFolder>${project.basedir}/target/generated-sources/annotations</targetFolder>
+                    <beansTargetFolder>${project.basedir}/src/main/java</beansTargetFolder>
+                    <exportBeans>true</exportBeans>
+                    <customTypes>
+                        <customType>com.querydsl.sql.types.JSR310LocalDateTimeType</customType>
+                        <customType>com.querydsl.sql.types.JSR310LocalDateType</customType>
+                    </customTypes>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysql</groupId>
+                        <artifactId>mysql-connector-j</artifactId>
+                        <version>8.0.33</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

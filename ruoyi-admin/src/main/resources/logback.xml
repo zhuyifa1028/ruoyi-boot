@@ -11,7 +11,7 @@
 			<pattern>${log.pattern}</pattern>
 		</encoder>
 	</appender>
-	
+
 	<!-- 系统日志输出 -->
 	<appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <file>${log.path}/sys-info.log</file>
@@ -34,7 +34,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
 	</appender>
-	
+
 	<appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <file>${log.path}/sys-error.log</file>
         <!-- 循环政策：基于时间创建日志文件 -->
@@ -56,8 +56,8 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-	
-	<!-- 用户访问日志输出  -->
+
+    <!-- 用户访问日志输出  -->
     <appender name="sys-user" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${log.path}/sys-user.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -70,24 +70,25 @@
             <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
-	
-	<!-- 系统模块日志级别控制  -->
+
+    <!-- 系统模块日志级别控制  -->
 	<logger name="com.ruoyi" level="info" />
+    <logger name="com.querydsl.sql.AbstractSQLQuery" level="FINE"/>
 	<!-- Spring日志级别控制  -->
 	<logger name="org.springframework" level="warn" />
 
 	<root level="info">
 		<appender-ref ref="console" />
 	</root>
-	
-	<!--系统操作日志-->
+
+    <!--系统操作日志-->
     <root level="info">
         <appender-ref ref="file_info" />
         <appender-ref ref="file_error" />
     </root>
-	
-	<!--系统用户操作日志-->
+
+    <!--系统用户操作日志-->
     <logger name="sys-user" level="info">
         <appender-ref ref="sys-user"/>
     </logger>
-</configuration> 
+</configuration>

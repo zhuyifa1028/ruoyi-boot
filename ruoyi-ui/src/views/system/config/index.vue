@@ -142,7 +142,7 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
+      :page.sync="queryParams.pageNumber"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import { listConfig, getConfig, delConfig, addConfig, updateConfig, refreshCache } from "@/api/system/config";
+import { addConfig, delConfig, getConfig, listConfig, refreshCache, updateConfig } from "@/api/system/config";
 
 export default {
   name: "Config",
@@ -210,7 +210,7 @@ export default {
       dateRange: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
+        pageNumber: 1,
         pageSize: 10,
         configName: undefined,
         configKey: undefined,
@@ -240,7 +240,7 @@ export default {
     getList() {
       this.loading = true;
       listConfig(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.configList = response.rows;
+        this.configList = response.data;
           this.total = response.total;
           this.loading = false;
         }
@@ -265,7 +265,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
+      this.queryParams.pageNumber = 1;
       this.getList();
     },
     /** 重置按钮操作 */
